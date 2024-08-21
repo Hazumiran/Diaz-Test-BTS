@@ -19,20 +19,26 @@ const LoginForm = () => {
     const [success, setSuccess] = useState(null);
     const navigate = useNavigate();
     const handleLogin = () => {
-        loginService(username, password)
-            .then((response) => {
-                // console.log('Ini tokenku udah yak:', response.data.data.token);
-                localStorage.setItem('token', response.data.data.token);
-                // console.log('Msg', response.message);
-                setSuccess('Login successful !');
-                setError(null);
-                navigate('/checklist');
-            })
-            .catch(error => {
-                setError(error.message);
-                setSuccess(null);
-                // console.error('Error during login:', error);
-            });
+        if (!username || !password) {
+            setError('Please enter username and password');
+            return;
+        }
+        else {
+            loginService(username, password)
+                .then((response) => {
+                    // console.log('Ini tokenku udah yak:', response.data.data.token);
+                    localStorage.setItem('token', response.data.data.token);
+                    // console.log('Msg', response.message);
+                    setSuccess('Login successful !');
+                    setError(null);
+                    navigate('/checklist');
+                })
+                .catch(error => {
+                    setError(error.message);
+                    setSuccess(null);
+                    // console.error('Error during login:', error);
+                });
+        }
 
         // const loginData = { username, password };
         // axios.post('http://94.74.86.174:8080/api/login', loginData)

@@ -86,6 +86,19 @@ const updateChecklistItemData = (idChecklist, idItem, itemName) => {
 }
 
 
+const updateStatusChecklistItemData = (idChecklist, idItem, itemStatus) => {
+    const token = localStorage.getItem('token');
+    console.log("DIS", idChecklist);
+    return axios.put(`${API_BASE_URL}/checklist/${idChecklist}/item/${idItem}`, {
+        itemCompletionStatus: itemStatus
+    }, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+}
+
+
 export {
     login,
     register,
@@ -94,5 +107,6 @@ export {
     removeChecklistData,
     removeChecklistDataItem,
     addChecklistItemData,
-    updateChecklistItemData
+    updateChecklistItemData,
+    updateStatusChecklistItemData
 };

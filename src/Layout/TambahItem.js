@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -58,13 +58,13 @@ const TambahItem = () => {
                 // console.error('Error during login:', error);
             });
     };
-    React.useEffect(() => {
+    useEffect(() => {
         setValueStatus(statusPage)
     }, [])
 
-    React.useEffect(() => {
-        console.log("Perubahan Nama nya", checklistitemName)
-    }, [checklistitemName])
+    // React.useEffect(() => {
+    //     console.log("Perubahan Nama nya", checklistitemName)
+    // }, [checklistitemName])
 
     return (
         <Box sx={{ minWidth: 275 }}>
@@ -80,7 +80,7 @@ const TambahItem = () => {
                         id="checklistitemName"
                         label="checklistitemName"
                         variant="outlined"
-                        value={valueStatus == "update" ? currentName : checklistitemName}
+                        value={valueStatus === "update" ? currentName : checklistitemName}
                         onChange={(e) => {
                             setChecklistitemName(e.target.value)
                             setValueStatus('add')
@@ -88,7 +88,7 @@ const TambahItem = () => {
                     />
                 </CardContent>
                 <CardActions>
-                    {statusPage == "update" ?
+                    {statusPage === "update" ?
                         <Button size="small" onClick={updateService}>
                             Update
                         </Button>

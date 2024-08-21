@@ -14,6 +14,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { removeChecklistData as deleteServicenyo } from '../Api/Api.js';
 import { removeChecklistDataItem as deleteitemServicenyo } from '../Api/Api.js';
+import { updateStatusChecklistItemData } from '../Api/Api.js';
 
 
 const ChecklistTodo = () => {
@@ -56,6 +57,48 @@ const ChecklistTodo = () => {
                 setError(error.message);
             });
     }
+
+    const ListItemComp = ({ item, checklistId }) => {
+        const [checked, setChecked] = useState(item.itemCompletionStatus);
+        const handleCheckboxChange = async (event) => {
+            const newChecked = event.target.checked;
+            setChecked(newChecked);
+
+            try {
+                await updateStatusChecklistItemData(checklistId, item.id, newChecked);
+                console.log('Suksesdd');
+            } catch (error) {
+                console.error('Ggal', error);
+                setChecked(!newChecked);
+            }
+        };
+
+        return (
+            <ListItem key={item.id}>
+                <Checkbox
+                    checked={checked}
+                    onChange={handleCheckboxChange}
+                    disableRipple
+                />
+                <ListItemText primary={item.name} />
+                <Button
+                    variant="contained"
+                    component={Link}
+                    to="/tambahitem"
+                    state={{ currentName: item.name, checklistId, statusPage: "update", idItem: item.id }}
+                >
+                    Ubah Item
+                </Button>
+                <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => deleteItemService(checklistId, item.id)}
+                >
+                    Hapus Item
+                </Button>
+            </ListItem>
+        );
+    }
     return (
         <>
             <Box sx={{ minWidth: 275 }}>
@@ -70,15 +113,16 @@ const ChecklistTodo = () => {
                                 {checklist.items && checklist.items.length > 0 ? (
                                     <List>
                                         {checklist.items.map(item => (
-                                            <ListItem key={item.id}>
-                                                <Checkbox
-                                                    checked={item.itemCompletionStatus}
-                                                    disableRipple
-                                                />
-                                                <ListItemText primary={item.name} />
-                                                <Button variant="contained" component={Link} to="/tambahitem" state={{ currentName: item.name, checklistId: checklist.id, statusPage: "update", idItem: item.id }}>Ubah Item</Button>
-                                                <Button variant="contained" color='error' onClick={() => deleteItemService(checklist.id, item.id)}>Hapus Item</Button>
-                                            </ListItem>
+                                            <ListItemComp key={item.id} item={item} checklistId={checklist.id} />
+                                            // <ListItem key={item.id}>
+                                            //     <Checkbox
+                                            //         checked={item.itemCompletionStatus}
+                                            //         disableRipple
+                                            //     />
+                                            //     <ListItemText primary={item.name} />
+                                            //     <Button variant="contained" component={Link} to="/tambahitem" state={{ currentName: item.name, checklistId: checklist.id, statusPage: "update", idItem: item.id }}>Ubah Item</Button>
+                                            //     <Button variant="contained" color='error' onClick={() => deleteItemService(checklist.id, item.id)}>Hapus Item</Button>
+                                            // </ListItem>
                                         ))}
                                         <Button variant="contained" component={Link} to="/tambahitem" state={{ checklistId: checklist.id, statusPage: "add" }}>Tambah Item</Button>
                                     </List>
